@@ -36,7 +36,7 @@ module Crono
     def perform
       return Thread.new {} if perform_before_interval?
 
-      log "Perform #{performer}"
+      log "Perform #{performer}" unless job_options[:skip_log]
       self.last_performed_at = Time.zone.now
       self.next_performed_at = period.next(since: last_performed_at)
 
@@ -96,7 +96,7 @@ module Crono
     def handle_job_success
       finished_time_sec = format('%.2f', Time.zone.now - last_performed_at)
       self.healthy = true
-      log "Finished #{performer} in #{finished_time_sec} seconds"
+      log "Finished #{performer} in #{finished_time_sec} seconds" unless job_options[:skip_log]
     end
 
     def log_error(message)
